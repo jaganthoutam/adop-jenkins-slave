@@ -1,10 +1,5 @@
 FROM centos:centos7.6.1810
 
-# Java Env Variables
-ENV JAVA_VERSION=1.8.0_202
-ENV JAVA_TARBALL=server-jre-8u202-linux-x64.tar.gz
-ENV JAVA_HOME=/opt/java/jdk${JAVA_VERSION}
-
 # Swarm Env Variables (defaults)
 ENV SWARM_MASTER=http://jenkins:8080/jenkins/
 ENV SWARM_USER=jenkins
@@ -48,14 +43,8 @@ RUN curl -L https://github.com/docker/machine/releases/download/${DOCKER_MACHINE
     chmod +x /usr/local/bin/docker-machine
 
 # Install Java
-RUN wget -q --no-check-certificate --directory-prefix=/tmp \
-         --header "Cookie: oraclelicense=accept-securebackup-cookie" \
-            https://download.oracle.com/otn-pub/java/jdk/8u202-b08/1961070e4c9b4e26a04e7f5a083f551e/${JAVA_TARBALL} && \
-          mkdir -p /opt/java && \
-              tar -xzf /tmp/${JAVA_TARBALL} -C /opt/java/ && \
-            alternatives --install /usr/bin/java java /opt/java/jdk${JAVA_VERSION}/bin/java 100 && \
-                rm -rf /tmp/* && rm -rf /var/log/*
-
+RUN yum install java-1.8.0-openjdk -y
+           
 # Make Jenkins a slave by installing swarm-client
 RUN curl -s -o /bin/swarm-client.jar -k http://repo.jenkins-ci.org/releases/org/jenkins-ci/plugins/swarm-client/3.8/swarm-client-3.8.jar
 

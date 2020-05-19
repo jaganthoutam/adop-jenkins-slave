@@ -58,6 +58,12 @@ RUN set -eux; \
     tar --extract --file /openjdk.tgz --directory "${JAVA_HOME}" --strip-components 1; \
     rm /openjdk.tgz;
            
+# Install kubectl and helm
+RUN curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl && \
+    chmod +x ./kubectl && \
+    mv ./kubectl /usr/local/bin/kubectl && \
+    curl https://raw.githubusercontent.com/kubernetes/helm/master/scripts/get | bash
+
 # Make Jenkins a slave by installing swarm-client
 RUN curl -s -o /bin/swarm-client.jar -k http://repo.jenkins-ci.org/releases/org/jenkins-ci/plugins/swarm-client/3.8/swarm-client-3.8.jar
 
